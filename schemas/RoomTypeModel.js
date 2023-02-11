@@ -11,7 +11,7 @@ const roomTypeSchema = new Schema({
         type: Number,
         required: true
     },
-    bathroom: {
+    bathrooms: {
         type: Number,
         required: true
     },
