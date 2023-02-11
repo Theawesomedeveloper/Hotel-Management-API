@@ -1,7 +1,7 @@
 
 // IMPORTING MY DATABASE MODELS
 const { Room } = require('./schemas/RoomModel');
-const {RoomType} = require('./schemas/RoomTypeModel')
+const { RoomType } = require('./schemas/RoomTypeModel')
 
 
 
@@ -48,8 +48,27 @@ class Controller {
         try {
             RoomType.find({}, { __v: 0 })
                 .then((data) => {
-                    console.log(data);
 
+                    res.status(200)
+                        .send({ success: true, data: data })
+                });
+
+        } catch (error) {
+            // console.error(`Fix me ${error.message}`)
+            res.status(500)
+                .send({ message: error.message, success: false })
+        }
+    }
+
+    /**
+     * this fetches all room types from the RoomType collection and sends it as response 
+     * @param {*} req 
+     * @param {*} res 
+     */
+    getRoomType(req, res) {
+        try {
+            RoomType.findOne(req.params, { __v: 0 })
+                .then((data) => {
                     res.status(200)
                         .send({ success: true, data: data })
                 });
@@ -110,14 +129,33 @@ class Controller {
 
 
 
-/**
- * Fetches all rooms document from the Rooms collection
- * @param {*} req 
- * @param {*} res 
- */
+    /**
+     * Fetches all rooms document from the Rooms collection
+     * @param {*} req 
+     * @param {*} res 
+     */
     getAllRooms(req, res) {
         try {
-            Room.find(req.query, { __v: 0 }).then((data) => {
+            Room.find({}, { __v: 0 }).then((data) => {
+                res.status(200)
+                    .send({ success: true, data: data })
+            })
+
+        } catch (error) {
+            res.status(500)
+                .send({ message: error.message, success: false })
+        }
+    }
+
+
+    /**
+     * Fetches q room document from the Rooms collection
+     * @param {*} req 
+     * @param {*} res 
+     */
+    getRoom(req, res) {
+        try {
+            Room.findOne(req.params, { __v: 0 }).then((data) => {
                 res.status(200)
                     .send({ success: true, data: data })
             })
@@ -183,17 +221,17 @@ class Controller {
 
     }
 
-/**
- * Edits a room in the rooms collection
- * @param {*} req 
- * @param {*} res 
- */
+    /**
+     * Edits a room in the rooms collection
+     * @param {*} req 
+     * @param {*} res 
+     */
     editRoom(req, res) {
         Room.findOneAndUpdate(req.params, req.body)
-        .then(data => {
-            console.log(data);
-            
-        })
+            .then(data => {
+                console.log(data);
+
+            })
     }
 
 }

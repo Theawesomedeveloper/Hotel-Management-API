@@ -1,7 +1,7 @@
 
 // IMPORTING THE NECESSARY MODULES
 const express = require('express')
-const { getAllRooms, createRoom, deleteRoom, editRoom } = require('../controller')
+const { getRoom, getAllRooms, createRoom, deleteRoom, editRoom } = require('../controller')
 const router = express.Router()
 
 
@@ -9,6 +9,8 @@ const router = express.Router()
 
 
 router.get('/', getAllRooms);
+
+router.get('/:roomId', getRoom);
 
 router.post('/', createRoom);
 

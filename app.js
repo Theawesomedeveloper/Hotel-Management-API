@@ -61,9 +61,9 @@ app.use(bodyParser.json())
 
 
 // Allowing express to route modules
-app.use('/roomtypes', roomtypes)
+app.use('/api/roomtypes', roomtypes)
 
-app.use('/rooms', rooms)
+app.use('/api/rooms', rooms)
 
 
 // express to listen for requests 
