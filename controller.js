@@ -51,7 +51,7 @@ class Controller {
 
                     res.status(200)
                         .send({ success: true, data: data })
-                });
+                })
 
         } catch (error) {
             // console.error(`Fix me ${error.message}`)
@@ -67,7 +67,7 @@ class Controller {
      */
     getRoomType(req, res) {
         try {
-            RoomType.findOne(req.params, { __v: 0 })
+            RoomType.findOne({type: req.params.roomtype}, { __v: 0 })
                 .then((data) => {
                     res.status(200)
                         .send({ success: true, data: data })
