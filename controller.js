@@ -46,7 +46,7 @@ class Controller {
      */
     getAllRoomTypes(req, res) {
         try {
-            RoomType.find({}, { __v: 0 })
+            RoomType.find(req.query, { __v: 0 })
                 .then((data) => {
 
                     res.status(200)
@@ -67,7 +67,7 @@ class Controller {
      */
     getRoomType(req, res) {
         try {
-            RoomType.findOne({type: req.params.roomtype}, { __v: 0 })
+            RoomType.findOne({ type: req.params.roomtype }, { __v: 0 })
                 .then((data) => {
                     res.status(200)
                         .send({ success: true, data: data })
@@ -136,10 +136,25 @@ class Controller {
      */
     getAllRooms(req, res) {
         try {
-            Room.find({}, { __v: 0 }).then((data) => {
-                res.status(200)
-                    .send({ success: true, data: data })
-            })
+
+            const { roomType } = req.query;
+            const query = req.query;
+
+            if (roomType) {
+                delete query.roomType
+
+
+                Room.find({ '$and': [query, { 'roomType.type': roomType }] })
+                    .then(data => {
+                        res.status(200)
+                            .send({ success: true, data: data })
+                    })
+            } else {
+                Room.find(query, { __v: 0 }).then((data) => {
+                    res.status(200)
+                        .send({ success: true, data: data })
+                })
+            }
 
         } catch (error) {
             res.status(500)
@@ -175,14 +190,12 @@ class Controller {
     createRoom(req, res) {
         try {
 
-            RoomType.find({ type: req.body.roomType })
-                .then(foundRooms => {
-                    const [foundRoom] = foundRooms
+            RoomType.findOne({ type: req.body.roomType })
+                .then(foundRoom => {
                     if (!foundRoom) {
                         // res.status(404).send({ message: error.message, success: false })
                         throw new Error('RoomType not found')
                     }
-                    console.log(foundRoom);
 
                     const room = new Room({
                         ...req.body,
@@ -227,11 +240,17 @@ class Controller {
      * @param {*} res 
      */
     editRoom(req, res) {
-        Room.findOneAndUpdate(req.params, req.body)
-            .then(data => {
-                console.log(data);
+        try {
+            Room.findOneAndUpdate(req.params, req.body)
+                .then(() => {
+                    res.status(200)
+                        .send({ success: true })
 
-            })
+                })
+        } catch (error) {
+            res.send(500)
+                .send({ message: error.message, success: false })
+        }
     }
 
 }
